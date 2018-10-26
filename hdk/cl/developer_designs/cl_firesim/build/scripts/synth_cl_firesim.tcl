@@ -35,7 +35,7 @@ puts "AWS FPGA: ([clock format [clock seconds] -format %T]) Reading developer's 
 # Reading the .sv and .v files, as proper designs would not require
 # reading .v, .vh, nor .inc files
 
-read_verilog -sv [glob $ENC_SRC_DIR/*.?v]
+read_verilog -sv [glob $ENC_SRC_DIR/*.*v*]
 
 #---- End of section replaced by User ----
 
@@ -106,7 +106,7 @@ puts "AWS FPGA: ([clock format [clock seconds] -format %T]) Start design synthes
 
 update_compile_order -fileset sources_1
 puts "\nRunning synth_design for $CL_MODULE $CL_DIR/build/scripts \[[clock format [clock seconds] -format {%a %b %d %H:%M:%S %Y}]\]"
-eval [concat synth_design -top $CL_MODULE -verilog_define XSDB_SLV_DIS -part [DEVICE_TYPE] -mode out_of_context $synth_options -directive $synth_directive -retiming]
+eval [concat synth_design -top $CL_MODULE -verilog_define XSDB_SLV_DIS -verilog_define FPGA -verilog_define SYNTHESIS -verilog_define DESIGNWARE_NOEXIST -verilog_define VLIB_BYPASS_POWER_CG -verilog_define NV_FPGA_SYSTEM -verilog_define NV_FPGA_FIFOGEN -verilog_define NV_FPGA_UNIT -part [DEVICE_TYPE] -mode out_of_context $synth_options -directive $synth_directive -retiming]
 
 set failval [catch {exec grep "FAIL" failfast.csv}]
 if { $failval==0 } {
